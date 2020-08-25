@@ -42,6 +42,7 @@
     // PHP 5 ou anteriores
     print (isset($_GET['nome'])) ? $_GET['nome'] : 'Não foi passado nenhum nome!';
     print '<br><br>';
+    
     // Null Coaslescing Operator (PHP 7+)
     print $_GET['nome'] ?? 'Não foi passado nenhum nome!';
     
