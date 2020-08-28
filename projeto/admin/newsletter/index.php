@@ -2,7 +2,34 @@
 
 # Configurações Gerais
 require_once 'config.php';
+$msg = null;
 
+try
+{
+    if (isset($_GET['excluir']))
+    {
+        $id = filter_var($_GET['excluir'], FILTER_VALIDATE_INT);
+        if ($id === false or $id <= 0) {
+          throw new Exception('ID de exclusão fornecido é inválido!');
+        }
+
+        if (!excluir_email_newsletter($id)) {
+          throw new Exception('Não foi possível excluir o e-mail selecionado na base de dados!');
+        }
+
+        $msg = array(
+          'classe' => 'alert-success',
+          'mensagem' => 'E-mail excluído com sucesso!'
+        );
+    }
+}
+catch(Exception $e)
+{
+    $msg = array(
+      'classe' => 'alert-danger',
+      'mensagem' => $e->getMessage()
+    );
+}
 
 // obtemos a lista de e-mails da base de dados
 $lista_emails = get_emails_newsletter();
@@ -23,6 +50,9 @@ require_once 'includes/header-admin.php';
         </p>
     </div>
     <div class="container">
+
+        <?php include_once "templates/alert-mensagens.php"; ?>
+
         <table class="table table-striped">
             <thead class="thead-dark">
               <tr>
