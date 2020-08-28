@@ -23,3 +23,4 @@ define('DB_PWD', '');
 require_once "lib/db.php";
 require_once "lib/utils.php";
 require_once "lib/emails-newsletter.php";
+require_once "lib/contatos.php";

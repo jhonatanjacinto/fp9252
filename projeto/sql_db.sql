@@ -12,3 +12,11 @@ CREATE TABLE registros (
     nome VARCHAR(50) NOT NULL,
     idade TINYINT(3) DEFAULT 0
 );
+
+CREATE TABLE contatos (
+    contato_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    mensagem TEXT NOT NULL,
+    data_contato TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

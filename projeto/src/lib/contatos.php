@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * Funções que gerenciam os contatos da nossa aplicação
+ */
+
+ /**
+  * Cadastra uma mensagem de contato no banco de dados
+  * @param string $nome
+  * @param string $email
+  * @param string $mensagem
+  * @return bool
+  */
+function cadastrar_contato(string $nome, string $email, string $mensagem) : bool
+{
+    $sql = "INSERT INTO contatos (nome, email, mensagem) VALUES(?, ?, ?)";
+    $params = array( $nome, $email, $mensagem );
+    return db_execute($sql, 'sss', $params);
+}
+
+/**
+ * 
+ */
+function excluir_contato(int $contato_id) : bool
+{
+    $sql = "DELETE FROM contatos WHERE contato_id = ?";
+    $params = array($contato_id);
+    return db_execute($sql, 'i', $params);
+}
+
+/**
+ * @return array
+ */
+function get_contatos() : array
+{
+    $sql = "SELECT * FROM contatos";
+    return db_query($sql);
+}
