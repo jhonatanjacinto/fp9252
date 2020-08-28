@@ -3,6 +3,10 @@
 # Configurações Gerais
 require_once 'config.php';
 
+
+// obtemos a lista de e-mails da base de dados
+$lista_emails = get_emails_newsletter();
+
 # Configurações da Página
 $titulo_pagina = "Administração | Newsletter";
 $link_ativo = 'newsletter';
@@ -29,36 +33,20 @@ require_once 'includes/header-admin.php';
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>mark@gmail.com</td>
-                <td>12/04/2020 às 18h00</td>
-                <td>
-                    <a href="" class="btn btn-danger" title="Excluir">
-                        <i class="far fa-trash-alt"></i>
-                    </a>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>mark@gmail.com</td>
-                <td>12/04/2020 às 18h00</td>
-                <td>
-                    <a href="" class="btn btn-danger" title="Excluir">
-                        <i class="far fa-trash-alt"></i>
-                    </a>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>mark@gmail.com</td>
-                <td>12/04/2020 às 18h00</td>
-                <td>
-                    <a href="" class="btn btn-danger" title="Excluir">
-                        <i class="far fa-trash-alt"></i>
-                    </a>
-                </td>
-              </tr>
+
+              <?php foreach ($lista_emails as $email) : ?>
+                <tr>
+                  <th scope="row"><?= $email['email_id'] ?></th>
+                  <td><?= $email['email'] ?></td>
+                  <td><?= $email['data_cadastro'] ?></td>
+                  <td>
+                      <a href="index.php?excluir=<?= $email['email_id'] ?>" class="btn btn-danger" title="Excluir">
+                          <i class="far fa-trash-alt"></i>
+                      </a>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+
             </tbody>
           </table>
     </div>
