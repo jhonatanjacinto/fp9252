@@ -2,6 +2,37 @@
 
 # Configurações Gerais
 require_once 'config.php';
+$msg = null;
+
+try 
+{
+    if (isset($_GET['excluir']))
+    {
+        $id = filter_var($_GET['excluir'], FILTER_VALIDATE_INT);
+        if ($id === false or $id <= 0) {
+          throw new Exception('ID de exclusão fornecido é inválido!');
+        }
+
+        if (!excluir_contato($id)) {
+          throw new Exception('Não foi possível excluir a mensagem de contato selecionada na base de dados!');
+        }
+
+        $msg = array(
+          'classe' => 'alert-success',
+          'mensagem' => 'Contato excluído com sucesso!'
+        );
+    }
+}
+catch(Exception $e)
+{
+    $msg = array(
+      'classe' => 'alert-danger',
+      'mensagem' => $e->getMessage()
+    );
+}
+
+# lista de contatos do banco
+$lista_contatos = get_contatos();
 
 # Configurações da Página
 $titulo_pagina = "Administração | Contatos";
@@ -18,6 +49,9 @@ require_once 'includes/header-admin.php';
         </p>
     </div>
     <div class="container">
+
+        <?php include_once "templates/alert-mensagens.php"; ?>
+
         <table class="table table-striped">
             <thead class="thead-dark">
               <tr>
@@ -30,42 +64,22 @@ require_once 'includes/header-admin.php';
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>mark@gmail.com</td>
-                <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, iste. Odio ab dolorum consequuntur qui debitis temporibus eum nobis, at voluptas aperiam, ratione quaerat voluptate dicta delectus pariatur quasi id.</td>
-                <td>12/04/2020 às 18h00</td>
-                <td>
-                    <a href="" class="btn btn-danger" title="Excluir">
-                        <i class="far fa-trash-alt"></i>
-                    </a>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Mark</td>
-                <td>mark@gmail.com</td>
-                <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, iste. Odio ab dolorum consequuntur qui debitis temporibus eum nobis, at voluptas aperiam, ratione quaerat voluptate dicta delectus pariatur quasi id.</td>
-                <td>12/04/2020 às 18h00</td>
-                <td>
-                    <a href="" class="btn btn-danger" title="Excluir">
-                        <i class="far fa-trash-alt"></i>
-                    </a>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Mark</td>
-                <td>mark@gmail.com</td>
-                <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, iste. Odio ab dolorum consequuntur qui debitis temporibus eum nobis, at voluptas aperiam, ratione quaerat voluptate dicta delectus pariatur quasi id.</td>
-                <td>12/04/2020 às 18h00</td>
-                <td>
-                    <a href="" class="btn btn-danger" title="Excluir">
-                        <i class="far fa-trash-alt"></i>
-                    </a>
-                </td>
-              </tr>
+
+              <?php foreach ($lista_contatos as $contato) : ?>
+                <tr>
+                  <th scope="row"><?= $contato['contato_id'] ?></th>
+                  <td><?= $contato['nome'] ?></td>
+                  <td><?= $contato['email'] ?></td>
+                  <td><?= $contato['mensagem'] ?></td>
+                  <td><?= $contato['data_contato'] ?></td>
+                  <td>
+                      <a href="index.php?excluir=<?= $contato['contato_id'] ?>" class="btn btn-danger" title="Excluir">
+                          <i class="far fa-trash-alt"></i>
+                      </a>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+
             </tbody>
           </table>
     </div>
