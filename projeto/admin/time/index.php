@@ -2,6 +2,36 @@
 
 # Configurações Gerais
 require_once 'config.php';
+$msg = null;
+
+try
+{
+    if (isset($_GET['excluir']))
+    {
+        $id = filter_var($_GET['excluir'], FILTER_VALIDATE_INT);
+        if ($id === false or $id <= 0) {
+          throw new Exception('ID de exclusão fornecido é inválido!');
+        }
+
+        if (!excluir_membro($id)) {
+          throw new Exception('Não foi possível excluir o membro selecionado na base de dados!');
+        }
+
+        $msg = array(
+          'classe' => 'alert-success',
+          'mensagem' => 'Membro excluído com sucesso!'
+        );
+    }
+}
+catch(Exception $e)
+{
+    $msg = array(
+      'classe' => 'alert-danger',
+      'mensagem' => $e->getMessage()
+    );
+}
+
+$lista_membros = get_membros();
 
 # Configurações da Página
 $titulo_pagina = "Administração | Time";
@@ -13,7 +43,7 @@ require_once 'includes/header-admin.php';
     <!-- CONTEUDO -->
     <div class="jumbotron container p-5 mb-5">
         <h1 class="h2 float-left">Time</h1>
-        <a href="adicionar.html" class="btn btn-success float-right">
+        <a href="adicionar.php" class="btn btn-success float-right">
             Novo Colaborador
         </a>
         <div class="clearfix"></div>
@@ -23,6 +53,9 @@ require_once 'includes/header-admin.php';
         </p>
     </div>
     <div class="container">
+
+        <?php include "templates/alert-mensagens.php"; ?>
+
         <table class="table table-striped">
             <thead class="thead-dark">
               <tr>
@@ -36,60 +69,28 @@ require_once 'includes/header-admin.php';
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td><img src="http://placehold.it/100x100" class="img-responsive"></td>
-                <td>Mark Otto</td>
-                <td>General Manager</td>
-                <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro sapiente enim pariatur soluta, quia quisquam inventore dolorem illo aspernatur eius repellat dignissimos voluptatibus provident ea numquam ab cum delectus explicabo.</td>
-                <td>Sim</td>
-                <td>
-                    <a href="editar.html" class="btn btn-primary" title="Editar">
-                        <i class="far fa-edit"></i>
-                    </a>
-                </td>
-                <td>
-                    <a href="" class="btn btn-danger" title="Excluir">
-                        <i class="far fa-trash-alt"></i>
-                    </a>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td><img src="http://placehold.it/100x100" class="img-responsive"></td>
-                <td>Mark Otto</td>
-                <td>General Manager</td>
-                <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro sapiente enim pariatur soluta, quia quisquam inventore dolorem illo aspernatur eius repellat dignissimos voluptatibus provident ea numquam ab cum delectus explicabo.</td>
-                <td>Sim</td>
-                <td>
-                    <a href="editar.html" class="btn btn-primary" title="Editar">
-                        <i class="far fa-edit"></i>
-                    </a>
-                </td>
-                <td>
-                    <a href="" class="btn btn-danger" title="Excluir">
-                        <i class="far fa-trash-alt"></i>
-                    </a>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td><img src="http://placehold.it/100x100" class="img-responsive"></td>
-                <td>Mark Otto</td>
-                <td>General Manager</td>
-                <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro sapiente enim pariatur soluta, quia quisquam inventore dolorem illo aspernatur eius repellat dignissimos voluptatibus provident ea numquam ab cum delectus explicabo.</td>
-                <td>Sim</td>
-                <td>
-                    <a href="editar.html" class="btn btn-primary" title="Editar">
-                        <i class="far fa-edit"></i>
-                    </a>
-                </td>
-                <td>
-                    <a href="" class="btn btn-danger" title="Excluir">
-                        <i class="far fa-trash-alt"></i>
-                    </a>
-                </td>
-              </tr>
+
+                <?php foreach ($lista_membros as $membro) : ?>
+                    <tr>
+                        <th scope="row"><?= $membro['membro_id'] ?></th>
+                        <td><img src="http://placehold.it/100x100" class="img-responsive"></td>
+                        <td><?= $membro['nome'] ?></td>
+                        <td><?= $membro['cargo'] ?></td>
+                        <td><?= $membro['minicurriculo'] ?></td>
+                        <td><?= $membro['ativo'] ? 'Sim' : 'Não' ?></td>
+                        <td>
+                            <a href="editar.php?id=<?= $membro['membro_id'] ?>" class="btn btn-primary" title="Editar">
+                                <i class="far fa-edit"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="index.php?excluir=<?= $membro['membro_id'] ?>" class="btn btn-danger" title="Excluir">
+                                <i class="far fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+
             </tbody>
           </table>
     </div>

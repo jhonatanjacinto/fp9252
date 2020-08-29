@@ -24,3 +24,7 @@ require_once "lib/db.php";
 require_once "lib/utils.php";
 require_once "lib/emails-newsletter.php";
 require_once "lib/contatos.php";
+require_once "lib/depoimentos.php";
+require_once "lib/time.php";
+require_once "lib/usuarios.php";
+require_once "lib/servicos.php";

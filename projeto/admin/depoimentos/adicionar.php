@@ -2,6 +2,41 @@
 
 # Configurações Gerais
 require_once 'config.php';
+$msg = null;
+
+try 
+{
+    if (isset($_POST['cadastrar_depoimento']))
+    {
+        $nome = filter_var($_POST['nome_pessoa'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $texto = filter_var($_POST['texto'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $ativo = (bool) ($_POST['ativo'] ?? false);
+
+        if (!$nome) {
+            throw new Exception('Nome é obrigatório!');
+        }
+
+        if (!$texto) {
+            throw new Exception('Texto do depoimento é obrigatório!');
+        }
+
+        if (!cadastrar_depoimento($nome, $texto, '', $ativo)) {
+            throw new Exception('Não foi possível cadastrar seu depoimento!');
+        }
+
+        $msg = array(
+            'classe' => 'alert-success',
+            'mensagem' => 'Depoimento cadastrado com sucesso!'
+        );
+    }
+}
+catch(Exception $e)
+{
+    $msg = array(
+        'classe' => 'alert-danger',
+        'mensagem' => $e->getMessage()
+    );
+}
 
 # Configurações da Página
 $titulo_pagina = "Administração | Novo Depoimento";
@@ -14,7 +49,7 @@ require_once 'includes/header-admin.php';
     <!-- CONTEUDO -->
     <div class="jumbotron container p-5 mb-5">
         <h1 class="h2 float-left"><span class="text-secondary">Depoimentos /</span> Novo Depoimento</h1>
-        <a href="index.html" class="btn btn-success float-right">
+        <a href="index.php" class="btn btn-success float-right">
             Voltar
         </a>
         <div class="clearfix"></div>
@@ -24,6 +59,9 @@ require_once 'includes/header-admin.php';
         </p>
     </div>
     <div class="container">
+        
+        <?php include "templates/alert-mensagens.php"; ?>
+
         <form method="POST" class="card" action="">
             <div class="card-body">
                 <div class="row">
@@ -41,12 +79,12 @@ require_once 'includes/header-admin.php';
                     </div>
                     <div class="form-group col-md-12">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="ativo" id="checkboxAtivo" checked>
+                            <input type="checkbox" class="custom-control-input" name="ativo" id="checkboxAtivo" value="1" checked>
                             <label class="custom-control-label" for="checkboxAtivo">Deixar depoimento ativo</label>
                         </div>
                     </div>
                     <div class="form-group col-md-12">
-                        <button class="btn btn-lg btn-success">
+                        <button name="cadastrar_depoimento" class="btn btn-lg btn-success">
                             Cadastrar Depoimento
                         </button>
                     </div>
