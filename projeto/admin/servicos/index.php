@@ -4,6 +4,35 @@
 require_once 'config.php';
 $msg = null;
 
+try
+{
+    if (isset($_GET['excluir']))
+    {
+        $id = filter_var($_GET['excluir'], FILTER_VALIDATE_INT);
+        if ($id === false or $id <= 0) {
+          throw new Exception('ID de exclusão fornecido é inválido!');
+        }
+
+        if (!excluir_servico($id)) {
+          throw new Exception('Não foi possível excluir o serviço selecionado na base de dados!');
+        }
+
+        $msg = array(
+          'classe' => 'alert-success',
+          'mensagem' => 'Serviço excluído com sucesso!'
+        );
+    }
+}
+catch(Exception $e)
+{
+    $msg = array(
+      'classe' => 'alert-danger',
+      'mensagem' => $e->getMessage()
+    );
+}
+
+$lista_servicos = get_servicos();
+
 # Configurações da Página
 $titulo_pagina = "Administração | Serviços";
 $link_ativo = 'servicos';
@@ -39,23 +68,25 @@ require_once 'includes/header-admin.php';
             </thead>
             <tbody>
                 
+                <?php foreach ($lista_servicos as $servico) : ?>
                     <tr>
-                        <th scope="row">1</th>
-                        <td>Nome do Serviço</td>
-                        <td>Conteúdo do Serviço</td>
-                        <td>Sim</td>
+                        <th scope="row"><?= $servico['servico_id'] ?></th>
+                        <td><?= $servico['nome_servico'] ?></td>
+                        <td><?= $servico['texto_servico'] ?></td>
+                        <td><?= $servico['ativo'] ? 'Sim' : 'Não' ?></td>
                         <td>
-                            <a href="editar.php" class="btn btn-primary" title="Editar">
+                            <a href="editar.php?id=<?= $servico['servico_id'] ?>" class="btn btn-primary" title="Editar">
                                 <i class="far fa-edit"></i>
                             </a>
                         </td>
                         <td>
-                            <a href="index.php" class="btn btn-danger" title="Excluir">
+                            <a href="index.php?excluir=<?= $servico['servico_id'] ?>" class="btn btn-danger" title="Excluir">
                                 <i class="far fa-trash-alt"></i>
                             </a>
                         </td>
                     </tr>
-                
+                <?php endforeach; ?>
+
             </tbody>
           </table>
     </div>

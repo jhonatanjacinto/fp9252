@@ -4,6 +4,41 @@
 require_once 'config.php';
 $msg = null;
 
+try 
+{
+    if (isset($_POST['cadastrar_usuario']))
+    {
+        $email = filter_var($_POST['email_login'], FILTER_VALIDATE_EMAIL);
+        $senha = filter_var($_POST['senha'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $confirmar_senha = filter_var($_POST['confirmar_senha'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $ativo = (bool) ($_POST['ativo'] ?? false);
+
+        if ($email === false) {
+            throw new Exception('E-mail inválido!');
+        }
+
+        if (!$senha or !$confirmar_senha or $senha != $confirmar_senha) {
+            throw new Exception('Senha e Confirmação devem ser preenchidas e iguais!');
+        }
+
+        if (!cadastrar_usuario($email, $senha, $ativo)) {
+            throw new Exception('Não foi possível cadastrar o usuário informado!');
+        }
+
+        $msg = array(
+            'classe' => 'alert-success',
+            'mensagem' => 'Usuário cadastrado com sucesso!'
+        );
+    }
+}
+catch(Exception $e)
+{
+    $msg = array(
+        'classe' => 'alert-danger',
+        'mensagem' => $e->getMessage()
+    );
+}
+
 # Configurações da Página
 $titulo_pagina = "Administração | Novo Usuário";
 $link_ativo = 'usuarios';

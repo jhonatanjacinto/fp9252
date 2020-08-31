@@ -2,6 +2,46 @@
 
 # Configurações Gerais
 require_once 'config.php';
+$msg = null;
+
+try 
+{
+    if (isset($_POST['cadastrar_membro']))
+    {
+        $nome = filter_var($_POST['nome_completo'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $minicurriculo = filter_var($_POST['texto'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $cargo = filter_var($_POST['cargo'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $ativo = (bool) ($_POST['ativo'] ?? false);
+
+        if (!$nome) {
+            throw new Exception('Nome do Membro é obrigatório!');
+        }
+
+        if (!$minicurriculo) {
+            throw new Exception('Minicurrículo é obrigatório!');
+        }
+
+        if (!$cargo) {
+            throw new Exception('Cargo é obrigatório!');
+        }
+
+        if (!cadastrar_membro($nome, $cargo, $minicurriculo, '', $ativo)) {
+            throw new Exception('Não foi possível cadastrar o membro informado!');
+        }
+
+        $msg = array(
+            'classe' => 'alert-success',
+            'mensagem' => 'Membro cadastrado com sucesso!'
+        );
+    }
+}
+catch(Exception $e)
+{
+    $msg = array(
+        'classe' => 'alert-danger',
+        'mensagem' => $e->getMessage()
+    );
+}
 
 # Configurações da Página
 $titulo_pagina = "Administração | Novo Colaborador";
@@ -13,7 +53,7 @@ require_once 'includes/header-admin.php';
     <!-- CONTEUDO -->
     <div class="jumbotron container p-5 mb-5">
         <h1 class="h2 float-left"><span class="text-secondary">Time /</span> Novo Colaborador</h1>
-        <a href="index.html" class="btn btn-success float-right">
+        <a href="index.php" class="btn btn-success float-right">
             Voltar
         </a>
         <div class="clearfix"></div>
@@ -23,6 +63,9 @@ require_once 'includes/header-admin.php';
         </p>
     </div>
     <div class="container">
+
+        <?php include 'templates/alert-mensagens.php'; ?>
+
         <form method="POST" class="card" action="">
             <div class="card-body">
                 <div class="row">
@@ -51,7 +94,7 @@ require_once 'includes/header-admin.php';
                     </div>
                     
                     <div class="form-group col-md-12">
-                        <button class="btn btn-lg btn-success">
+                        <button name="cadastrar_membro" class="btn btn-lg btn-success">
                             Cadastrar Colaborador
                         </button>
                     </div>

@@ -9,9 +9,31 @@
  */
 function cadastrar_usuario(string $email_login, string $senha, bool $ativo = true) : bool
 {
+    if (is_usuario_cadastrado($email_login)) {
+        throw new Exception('E-mail já cadastrado para um usuário no sistema!');
+    }
+
     $sql = "INSERT INTO usuarios_admin(email_login, senha, ativo) VALUES(?, ?, ?)";
     $params = array($email_login, $senha, $ativo);
     return db_execute($sql, 'ssi', $params);
+}
+
+/**
+ * Verifica se um usuário já está cadastrado na base de dados
+ * @param string $email_login       Usuário a ser verificado
+ * @return bool
+ */
+function is_usuario_cadastrado(string $email_login) : bool 
+{
+    $sql = "SELECT email_login FROM usuarios_admin WHERE email_login = ?";
+    $param = array($email_login);
+    $resultado = db_query($sql, 's', $param);
+
+    if ($resultado) {
+        return true;
+    }
+
+    return false;
 }
 
 /**

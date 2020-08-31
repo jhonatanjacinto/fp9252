@@ -4,6 +4,40 @@
 require_once 'config.php';
 $msg = null;
 
+try 
+{
+    if (isset($_POST['cadastrar_servico']))
+    {
+        $nome = filter_var($_POST['nome_servico'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $texto = filter_var($_POST['texto'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $ativo = (bool) ($_POST['ativo'] ?? false);
+
+        if (!$nome) {
+            throw new Exception('Nome do Serviço é obrigatório!');
+        }
+
+        if (!$texto) {
+            throw new Exception('Texto do Serviço é obrigatório!');
+        }
+
+        if (!cadastrar_servico($nome, $texto, $ativo)) {
+            throw new Exception('Não foi possível cadastrar o serviço informado!');
+        }
+
+        $msg = array(
+            'classe' => 'alert-success',
+            'mensagem' => 'Serviço cadastrado com sucesso!'
+        );
+    }
+}
+catch(Exception $e)
+{
+    $msg = array(
+        'classe' => 'alert-danger',
+        'mensagem' => $e->getMessage()
+    );
+}
+
 # Configurações da Página
 $titulo_pagina = "Administração | Novo Serviço";
 $link_ativo = 'servicos';

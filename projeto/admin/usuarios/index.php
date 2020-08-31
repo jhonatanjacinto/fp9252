@@ -4,6 +4,35 @@
 require_once 'config.php';
 $msg = null;
 
+try
+{
+    if (isset($_GET['excluir']))
+    {
+        $id = filter_var($_GET['excluir'], FILTER_VALIDATE_INT);
+        if ($id === false or $id <= 0) {
+          throw new Exception('ID de exclusão fornecido é inválido!');
+        }
+
+        if (!excluir_usuario($id)) {
+          throw new Exception('Não foi possível excluir o usuário selecionado na base de dados!');
+        }
+
+        $msg = array(
+          'classe' => 'alert-success',
+          'mensagem' => 'Usuário excluído com sucesso!'
+        );
+    }
+}
+catch(Exception $e)
+{
+    $msg = array(
+      'classe' => 'alert-danger',
+      'mensagem' => $e->getMessage()
+    );
+}
+
+$lista_usuarios = get_usuarios();
+
 # Configurações da Página
 $titulo_pagina = "Administração | Usuários";
 $link_ativo = 'usuarios';
@@ -37,21 +66,25 @@ require_once 'includes/header-admin.php';
               </tr>
             </thead>
             <tbody>
+
+            <?php foreach ($lista_usuarios as $usuario) : ?>
                 <tr>
-                    <th scope="row">1</th>
-                    <td>mark@otto.com</td>
-                    <td>Sim</td>
+                    <th scope="row"><?= $usuario['usuario_id'] ?></th>
+                    <td><?= $usuario['email_login'] ?></td>
+                    <td><?= $usuario['ativo'] ? 'Sim' : 'Não' ?></td>
                     <td>
-                        <a href="editar.php" class="btn btn-primary" title="Editar">
+                        <a href="editar.php?id=<?= $usuario['usuario_id'] ?>" class="btn btn-primary" title="Editar">
                             <i class="far fa-edit"></i>
                         </a>
                     </td>
                     <td>
-                        <a href="index.php" class="btn btn-danger" title="Excluir">
+                        <a href="index.php?excluir=<?= $usuario['usuario_id'] ?>" class="btn btn-danger" title="Excluir">
                             <i class="far fa-trash-alt"></i>
                         </a>
                     </td>
                 </tr>
+            <?php endforeach; ?>
+
             </tbody>
           </table>
     </div>
