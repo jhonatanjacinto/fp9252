@@ -51,3 +51,20 @@ CREATE TABLE servicos (
     texto_servico TEXT NOT NULL,
     ativo BOOLEAN DEFAULT 1
 );
+
+CREATE TABLE categorias (
+    categoria_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    nome_categoria VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE portfolio (
+    projeto_id INT (11) AUTO_INCREMENT PRIMARY KEY,
+    categoria_id INT (11),
+    FOREIGN KEY (categoria_id) REFERENCES categorias (categoria_id) 
+    ON UPDATE CASCADE ON DELETE SET NULL,
+    titulo VARCHAR(50) NOT NULL,
+    descricao TEXT NOT NULL,
+    imagem VARCHAR(100) NOT NULL,
+    ativo BOOLEAN DEFAULT 1,
+    data_projeto TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
