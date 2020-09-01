@@ -41,7 +41,12 @@
     }
 
     /**
-     * 
+     * Configura a mensagem de erro ou de sucesso a ser exibida pela aplicação
+     * @param string $msg       Mensagem a ser exibida pela aplicação
+     * @param string $classe    Classe CSS a ser aplicada no elemento HTML da mensagem
+     * @param string $url       URL de redirecionamento (Por padrão redireciona para a página atual)
+     * @param string $id        ID da mensagem na Sessão
+     * @return void
      */
     function set_mensagem(string $msg, string $classe, string $url = '', string $id = 'msg')
     {
@@ -57,12 +62,14 @@
     }
 
     /**
-     * 
+     * Retorna a mensagem guardada na sessão da aplicação
+     * @param string $id    ID da chave na Sessão que contém a mensagem
+     * @return array|null
      */
     function get_mensagem(string $id = 'msg')
     {
         $msg = $_SESSION[$id] ?? null;
-        unset($_SESSION[$id]);
+        unset($_SESSION[$id]); // remove o dado da sessão
 
         return $msg;
     }
