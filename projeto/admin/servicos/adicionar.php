@@ -2,7 +2,7 @@
 
 # Configurações Gerais
 require_once 'config.php';
-$msg = null;
+$msg = get_mensagem();
 
 try 
 {
@@ -24,18 +24,12 @@ try
             throw new Exception('Não foi possível cadastrar o serviço informado!');
         }
 
-        $msg = array(
-            'classe' => 'alert-success',
-            'mensagem' => 'Serviço cadastrado com sucesso!'
-        );
+        set_mensagem('Serviço cadastrado com sucesso!', 'alert-success');
     }
 }
 catch(Exception $e)
 {
-    $msg = array(
-        'classe' => 'alert-danger',
-        'mensagem' => $e->getMessage()
-    );
+    set_mensagem($e->getMessage(), 'alert-danger');
 }
 
 # Configurações da Página

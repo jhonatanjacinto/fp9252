@@ -16,6 +16,11 @@ define('DB_NAME', 'caeland');
 define('DB_USER', 'root');
 define('DB_PWD', '');
 
+/** Habilita o uso de sessões na nossa aplicação */
+if (!session_id()) {
+    session_start();
+}
+
 
 /**
  * Importamos as bibliotecas necessárias para o funcionamento do sistema

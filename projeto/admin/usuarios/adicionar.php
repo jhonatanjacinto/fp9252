@@ -2,7 +2,7 @@
 
 # Configurações Gerais
 require_once 'config.php';
-$msg = null;
+$msg = get_mensagem();
 
 try 
 {
@@ -25,18 +25,12 @@ try
             throw new Exception('Não foi possível cadastrar o usuário informado!');
         }
 
-        $msg = array(
-            'classe' => 'alert-success',
-            'mensagem' => 'Usuário cadastrado com sucesso!'
-        );
+        set_mensagem('Usuário cadastrado com sucesso!', 'alert-danger');
     }
 }
 catch(Exception $e)
 {
-    $msg = array(
-        'classe' => 'alert-danger',
-        'mensagem' => $e->getMessage()
-    );
+    set_mensagem($e->getMessage(), 'alert-danger');
 }
 
 # Configurações da Página

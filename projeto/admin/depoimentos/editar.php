@@ -2,7 +2,7 @@
 
 # Configurações Gerais
 require_once 'config.php';
-$msg = null;
+$msg = get_mensagem();
 $depoimento_info = array();
 
 try
@@ -30,10 +30,7 @@ try
             throw new Exception('Não foi possível atualizar seu depoimento!');
         }
 
-        $msg = array(
-            'classe' => 'alert-success',
-            'mensagem' => 'Depoimento atualizado com sucesso!'
-        );
+        set_mensagem('Depoimento atualizado com sucesso!', 'alert-success');
     }
 
 
@@ -44,22 +41,17 @@ try
         $depoimento_info = get_depoimento_por_id($id);
 
         if (!$depoimento_info) {
-            header('Location: index.php');
-            exit();
+            set_mensagem('Depoimento não encontrado na base de dados!', 'alert-warning', 'index.php');
         }
     }
     else 
     {
-        header('Location: index.php');
-        exit();
+        set_mensagem('ID inválido para edição!', 'alert-warning', 'index.php');
     }
 }
 catch(Exception $e)
 {
-    $msg = array(
-        'classe' => 'alert-danger',
-        'mensagem' => $e->getMessage()
-    );
+    set_mensagem($e->getMessage(), 'alert-danger');
 }
 
 # Configurações da Página

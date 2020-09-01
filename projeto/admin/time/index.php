@@ -2,7 +2,7 @@
 
 # Configurações Gerais
 require_once 'config.php';
-$msg = null;
+$msg = get_mensagem();
 
 try
 {
@@ -17,18 +17,12 @@ try
           throw new Exception('Não foi possível excluir o membro selecionado na base de dados!');
         }
 
-        $msg = array(
-          'classe' => 'alert-success',
-          'mensagem' => 'Membro excluído com sucesso!'
-        );
+        set_mensagem('Membro excluído com sucesso!', 'alert-success', 'index.php');
     }
 }
 catch(Exception $e)
 {
-    $msg = array(
-      'classe' => 'alert-danger',
-      'mensagem' => $e->getMessage()
-    );
+    set_mensagem($e->getMessage(), 'alert-danger', 'index.php');
 }
 
 $lista_membros = get_membros();

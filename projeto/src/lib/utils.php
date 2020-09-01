@@ -39,3 +39,30 @@
             'usuarios' => array('Usuários', get_url('admin/usuarios')),
         );
     }
+
+    /**
+     * 
+     */
+    function set_mensagem(string $msg, string $classe, string $url = '', string $id = 'msg')
+    {
+        $_SESSION[ $id ] = array(
+            'mensagem' => $msg,
+            'classe' => $classe
+        );
+
+        $url = $url ? $url : $_SERVER['REQUEST_URI'];
+
+        header("Location: $url");
+        exit();
+    }
+
+    /**
+     * 
+     */
+    function get_mensagem(string $id = 'msg')
+    {
+        $msg = $_SESSION[$id] ?? null;
+        unset($_SESSION[$id]);
+
+        return $msg;
+    }
