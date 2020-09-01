@@ -37,7 +37,30 @@ function get_depoimentos() : array
     return db_query($sql);
 }
 
-function atualizar_depoimento()
+/**
+ * Retorna os dados de um depoimento específico (buscado na base por ID)
+ * @param int $depoimento_id    ID do depoimento
+ * @return array|null
+ */
+function get_depoimento_por_id(int $depoimento_id) : ?array 
 {
+    $sql = "SELECT * FROM depoimentos WHERE depoimento_id = ?";
+    $params = array($depoimento_id);
+    return db_query($sql, 'i', $params, true);
+}
 
+/**
+ * Atualiza um depoimento no sistema
+ * @param string $nome      Nome do depoente
+ * @param string $texto     Texto descritivo do depoimento
+ * @param string $foto      Foto do depoente
+ * @param bool $ativo       Se o depoimento deve estar ativo ou não no sistema
+ * @param int $depoimento_id    ID do depoimento a ser atualizado
+ * @return bool
+ */
+function atualizar_depoimento(string $nome, string $texto, string $foto = '', bool $ativo = true, int $depoimento_id) : bool 
+{
+    $sql = "UPDATE depoimentos SET nome = ?, texto = ?, foto = ?, ativo = ? WHERE depoimento_id = ?";
+    $params = array($nome, $texto, $foto, $ativo, $depoimento_id);
+    return db_execute($sql, 'sssii', $params);
 }

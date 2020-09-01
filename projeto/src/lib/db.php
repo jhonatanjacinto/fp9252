@@ -29,6 +29,10 @@ function db_query(string $sql, string $param_types = '', array $params = [], boo
     $conexao = get_db_connection();
     $stmt = mysqli_prepare($conexao, $sql);
 
+    if (!$stmt or mysqli_stmt_errno($stmt)) {
+        throw new Exception('Erro na estrutura do comando SQL informado!');
+    }
+
     if ($params and $param_types) {
         mysqli_stmt_bind_param($stmt, $param_types, ...$params);
     }
@@ -56,6 +60,10 @@ function db_execute(string $sql, string $param_types = '', array $params = [])
 {
     $conexao = get_db_connection();
     $stmt = mysqli_prepare($conexao, $sql);
+
+    if (!$stmt or mysqli_stmt_errno($stmt)) {
+        throw new Exception('Erro na estrutura do comando SQL informado!');
+    }
 
     if ($params and $param_types) {
         mysqli_stmt_bind_param($stmt, $param_types, ...$params);
