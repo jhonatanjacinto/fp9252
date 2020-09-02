@@ -25,7 +25,7 @@ try
             throw new Exception('Não foi possível cadastrar o usuário informado!');
         }
 
-        set_mensagem('Usuário cadastrado com sucesso!', 'alert-danger');
+        set_mensagem('Usuário cadastrado com sucesso!', 'alert-success');
     }
 }
 catch(Exception $e)

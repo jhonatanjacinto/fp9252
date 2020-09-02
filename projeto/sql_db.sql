@@ -45,6 +45,8 @@ CREATE TABLE usuarios_admin (
     ativo BOOLEAN DEFAULT 1
 );
 
+ALTER TABLE usuarios_admin ADD CONSTRAINT email_unique UNIQUE (email_login);
+
 CREATE TABLE servicos (
     servico_id INT(11) AUTO_INCREMENT PRIMARY KEY,
     nome_servico VARCHAR(50) NOT NULL,

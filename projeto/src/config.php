@@ -21,7 +21,6 @@ if (!session_id()) {
     session_start();
 }
 
-
 /**
  * Importamos as bibliotecas necessárias para o funcionamento do sistema
  */
@@ -33,3 +32,11 @@ require_once "lib/depoimentos.php";
 require_once "lib/time.php";
 require_once "lib/usuarios.php";
 require_once "lib/servicos.php";
+
+/** Realiza o logout do usuário */
+if (isset($_GET['logout'])) {
+    logout();
+}
+
+/** Bloqueia o acesso ao admin */
+bloquear_acesso_admin();

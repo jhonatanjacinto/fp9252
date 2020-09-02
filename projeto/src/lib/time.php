@@ -38,7 +38,31 @@ function get_membros() : array
     return db_query($sql);
 }
 
-function atualizar_membro()
+/**
+ * Retorna um membro selecionado na base por seu ID
+ * @param int $membro_id     ID do membro a ser selecionado
+ * @return array|null
+ */
+function get_membro_por_id(int $membro_id) : ?array
 {
+    $sql = "SELECT * FROM nosso_time WHERE membro_id = ?";
+    $params = array($membro_id);
+    return db_query($sql, 'i', $params, true);
+}
 
+/**
+ * Atualiza um membro no time da empresa
+ * @param string $nome              Nome do membro
+ * @param string $cargo             Cargo do Membro
+ * @param string $minicurriculo     Minicurrículo do membro
+ * @param string $foto              Foto do Membro
+ * @param bool $ativo               Indica se o membro deve estar ativo ou não
+ * @param bool $membro_id           ID do membro a ser atualizado
+ * @return bool
+ */
+function atualizar_membro(string $nome, string $cargo, string $minicurriculo, string $foto = '', bool $ativo = true, int $membro_id) : bool
+{
+    $sql = "UPDATE nosso_time SET nome = ?, cargo = ?, minicurriculo = ?, foto = ?, ativo = ? WHERE membro_id = ?";
+    $params = array($nome, $cargo, $minicurriculo, $foto, $ativo, $membro_id);
+    return db_execute($sql, 'ssssii', $params);
 }

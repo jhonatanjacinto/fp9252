@@ -19,29 +19,41 @@ $menu_items = get_menu_admin();
     </style>
 </head>
 <body>
-    <!-- TOPO e NAVEGAÇÃO ADMIN -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3">
-        <a href="<?= get_url('admin/index.php') ?>" class="navbar-brand mb-0 h1"><?= SITE_NAME ?>&trade;</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alterna navegação">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
 
-            <ul class="navbar-nav mr-auto">
-                <?php foreach ($menu_items as $chave => $item) : 
-                        $active = ($link_ativo == $chave) ? 'active' : null;
-                ?>
-                    <li class="nav-item <?= $active ?>">
-                        <a class="nav-link" href="<?= $item[1] ?>">
-                            <?= $item[0] ?>
-                        </a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
+    <?php if ($link_ativo != 'login') : ?>
 
-            <span class="navbar-text">
-                Bem-vindo(a), <strong class="text-white">andre@gmail.com</strong> &nbsp;|&nbsp; 
-                <a href="login.html" class="text-warning">Logout</a>
-            </span>
-        </div>
-    </nav>
+        <!-- TOPO e NAVEGAÇÃO ADMIN -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3">
+            <a href="<?= get_url('admin/index.php') ?>" class="navbar-brand mb-0 h1"><?= SITE_NAME ?>&trade;</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alterna navegação">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <ul class="navbar-nav mr-auto">
+                    <?php foreach ($menu_items as $chave => $item) : 
+                            $active = ($link_ativo == $chave) ? 'active' : null;
+                    ?>
+                        <li class="nav-item <?= $active ?>">
+                            <a class="nav-link" href="<?= $item[1] ?>">
+                                <?= $item[0] ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+
+                <span class="navbar-text">
+                    Bem-vindo(a), <strong class="text-white"><?= get_usuario_logado() ?></strong> &nbsp;|&nbsp; 
+                    <a href="<?= get_url('admin/login.php?logout=true') ?>" class="text-warning">Logout</a>
+                </span>
+            </div>
+        </nav>
+    
+    <?php else : ?>
+
+        <!-- TOPO LOGIN ADMIN -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3">
+            <span class="navbar-brand mb-0 h1"><?= SITE_NAME ?>&trade;</span> <span class="navbar-text">Área Restrita | Login</span>
+        </nav>
+
+    <?php endif; ?>
