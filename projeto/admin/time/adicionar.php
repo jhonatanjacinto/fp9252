@@ -12,6 +12,12 @@ try
         $minicurriculo = filter_var($_POST['texto'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $cargo = filter_var($_POST['cargo'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $ativo = (bool) ($_POST['ativo'] ?? false);
+        $foto = $_FILES['foto']['name'] ? $_FILES['foto'] : '';
+
+        if ($foto and is_array($foto)) {
+            $nome_arquivo = upload_imagem($foto, 'time');
+            $foto = 'time/' . $nome_arquivo;
+        }
 
         if (!$nome) {
             throw new Exception('Nome do Membro é obrigatório!');
@@ -25,7 +31,7 @@ try
             throw new Exception('Cargo é obrigatório!');
         }
 
-        if (!cadastrar_membro($nome, $cargo, $minicurriculo, '', $ativo)) {
+        if (!cadastrar_membro($nome, $cargo, $minicurriculo, $foto, $ativo)) {
             throw new Exception('Não foi possível cadastrar o membro informado!');
         }
 
@@ -60,7 +66,7 @@ require_once 'includes/header-admin.php';
 
         <?php include 'templates/alert-mensagens.php'; ?>
 
-        <form method="POST" class="card" action="">
+        <form method="POST" class="card" action="" enctype="multipart/form-data">
             <div class="card-body">
                 <div class="row">
                     <div class="form-group col-md-6">

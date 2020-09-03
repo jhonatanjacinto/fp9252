@@ -67,7 +67,7 @@ require_once 'includes/header-admin.php';
                 <?php foreach ($lista_membros as $membro) : ?>
                     <tr>
                         <th scope="row"><?= $membro['membro_id'] ?></th>
-                        <td><img src="http://placehold.it/100x100" class="img-responsive"></td>
+                        <td><img src="<?= get_imagem_url($membro['foto']) ?>" width="100" class="img-responsive"></td>
                         <td><?= $membro['nome'] ?></td>
                         <td><?= $membro['cargo'] ?></td>
                         <td><?= $membro['minicurriculo'] ?></td>

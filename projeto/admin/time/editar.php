@@ -14,6 +14,12 @@ try
         $cargo = filter_var($_POST['cargo'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $minicurriculo = filter_var($_POST['texto'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $ativo = (bool) ($_POST['ativo'] ?? false);
+        $foto = $_FILES['foto']['name'] ? $_FILES['foto'] : '';
+
+        if ($foto and is_array($foto)) {
+            $nome_arquivo = upload_imagem($foto, 'time');
+            $foto = 'time/' . $nome_arquivo;
+        }
 
         if (!$nome) {
             throw new Exception('Nome do Membro é obrigatório!');
@@ -31,7 +37,7 @@ try
             throw new Exception('ID inválido!');
         }
 
-        if (!atualizar_membro($nome, $cargo, $minicurriculo, '', $ativo, $id)) {
+        if (!atualizar_membro($nome, $cargo, $minicurriculo, $foto, $ativo, $id)) {
             throw new Exception('Não foi possível atualizar o membro do time especificado!');
         }
 
@@ -82,7 +88,7 @@ require_once 'includes/header-admin.php';
 
         <?php include_once "templates/alert-mensagens.php"; ?>
 
-        <form method="POST" class="card" action="">
+        <form method="POST" class="card" action="" enctype="multipart/form-data">
             <div class="card-body">
                 <div class="row">
                     <div class="form-group col-md-6">
