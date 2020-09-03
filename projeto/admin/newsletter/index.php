@@ -62,7 +62,7 @@ require_once 'includes/header-admin.php';
                 <tr>
                   <th scope="row"><?= $email['email_id'] ?></th>
                   <td><?= $email['email'] ?></td>
-                  <td><?= $email['data_cadastro'] ?></td>
+                  <td><?= get_data_formatada($email['data_cadastro']) ?></td>
                   <td>
                       <a href="index.php?excluir=<?= $email['email_id'] ?>" class="btn btn-danger" title="Excluir">
                           <i class="far fa-trash-alt"></i>

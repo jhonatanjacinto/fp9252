@@ -66,7 +66,7 @@ require_once 'includes/header-admin.php';
               <?php foreach ($lista_depoimentos as $depoimento) : ?>
                 <tr>
                     <th scope="row"><?= $depoimento['depoimento_id'] ?></th>
-                    <td><img src="http://placehold.it/100x100" class="img-responsive"></td>
+                    <td><img src="<?= get_imagem_url($depoimento['foto']) ?>" width="100" class="img-responsive"></td>
                     <td><?= $depoimento['nome'] ?></td>
                     <td><?= $depoimento['texto'] ?></td>
                     <td><?= $depoimento['ativo'] ? 'Sim' : 'Não' ?></td>

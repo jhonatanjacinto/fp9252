@@ -9,6 +9,9 @@ define('SITE_EMAIL_CONTATO', 'oi@caeland.com');
 define('SITE_TWITTER_URL', 'https://twitter.com/caeland');
 define('SITE_FACEBOOK_URL', 'https://facebook.com/caeland');
 define('SITE_INSTAGRAM_URL', 'https://instagram.com/caeland');
+define('SITE_PATH', $_SERVER['DOCUMENT_ROOT'] . '/FP-73/projeto/');
+define('SITE_PATH_IMG', SITE_PATH . 'assets/images/');
+define('SITE_URL_IMG', SITE_URL . 'assets/images/');
 
 /** Configurações de Banco de Dados */
 define('DB_HOST', 'localhost');

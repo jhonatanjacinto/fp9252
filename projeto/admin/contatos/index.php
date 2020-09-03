@@ -65,7 +65,7 @@ require_once 'includes/header-admin.php';
                   <td><?= $contato['nome'] ?></td>
                   <td><?= $contato['email'] ?></td>
                   <td><?= $contato['mensagem'] ?></td>
-                  <td><?= $contato['data_contato'] ?></td>
+                  <td><?= get_data_formatada($contato['data_contato']) ?></td>
                   <td>
                       <a href="index.php?excluir=<?= $contato['contato_id'] ?>" class="btn btn-danger" title="Excluir">
                           <i class="far fa-trash-alt"></i>

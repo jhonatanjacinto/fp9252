@@ -11,6 +11,7 @@ try
         $nome = filter_var($_POST['nome_pessoa'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $texto = filter_var($_POST['texto'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $ativo = (bool) ($_POST['ativo'] ?? false);
+        $foto = $_FILES['foto_pessoa']['name'] ? $_FILES['foto_pessoa'] : '';
 
         if (!$nome) {
             throw new Exception('Nome é obrigatório!');
@@ -20,7 +21,12 @@ try
             throw new Exception('Texto do depoimento é obrigatório!');
         }
 
-        if (!cadastrar_depoimento($nome, $texto, '', $ativo)) {
+        if ($foto and is_array($foto)) {
+            $nome_arquivo = upload_imagem($foto, 'depoimentos');
+            $foto = 'depoimentos/' . $nome_arquivo;
+        }
+
+        if (!cadastrar_depoimento($nome, $texto, $foto, $ativo)) {
             throw new Exception('Não foi possível cadastrar seu depoimento!');
         }
 
@@ -56,7 +62,7 @@ require_once 'includes/header-admin.php';
         
         <?php include "templates/alert-mensagens.php"; ?>
 
-        <form method="POST" class="card" action="">
+        <form method="POST" class="card" action="" enctype="multipart/form-data">
             <div class="card-body">
                 <div class="row">
                     <div class="form-group col-md-6">
