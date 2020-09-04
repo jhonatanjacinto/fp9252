@@ -23,7 +23,7 @@ try
         set_mensagem('Categoria atualizada com sucesso!', 'alert-success');
     }
 
-    if (isset($_GET['id']) and is_numeric($_GET['id']))
+    if (isset($_GET['id']))
     {
         $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
         $categoria_info = CategoriaDAO::getCategoriaPorId($id);

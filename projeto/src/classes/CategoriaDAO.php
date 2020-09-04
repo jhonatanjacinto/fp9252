@@ -23,11 +23,7 @@ class CategoriaDAO
     }
 
     public static function excluir(int $categoria_id) : bool 
-    {
-        if ($categoria_id <= 0) {
-            throw new Exception("ID da Categoria é inválido!");
-        }
-        
+    {        
         $db = new DB();
         $sql = "DELETE FROM categorias WHERE categoria_id = ?";
         $params = array($categoria_id);
@@ -60,10 +56,6 @@ class CategoriaDAO
 
     public static function getCategoriaPorId(int $categoria_id) : ?Categoria 
     {
-        if ($categoria_id <= 0) {
-            throw new Exception("ID da Categoria é inválido!");
-        }
-
         $db = new DB();
         $sql = "SELECT * FROM categorias WHERE categoria_id = ?";
         $params = array( $categoria_id );
