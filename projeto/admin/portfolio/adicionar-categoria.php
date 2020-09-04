@@ -2,7 +2,27 @@
 
 # Configurações Gerais
 require_once 'config.php';
-$msg = null;
+$msg = get_mensagem();
+
+try 
+{
+    if (isset($_POST['cadastrar_categoria']))
+    {
+        $nome = $_POST['nome_categoria'] ?? '';
+        $categoria = new Categoria();
+        $categoria->setNome($nome);
+
+        if (!CategoriaDAO::adicionar($categoria)) {
+            throw new Exception('Não foi possível cadastrar a Categoria!');
+        }
+
+        set_mensagem('Categoria cadastrada com sucesso!', 'alert-success');
+    }
+}
+catch(Exception $e)
+{
+    set_mensagem($e->getMessage(), 'alert-danger');
+}
 
 # Configurações da Página
 $titulo_pagina = "Administração | Nova Categoria";

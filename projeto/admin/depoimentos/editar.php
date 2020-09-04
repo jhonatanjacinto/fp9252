@@ -13,7 +13,7 @@ try
         $nome = filter_var($_POST['nome_pessoa'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $texto = filter_var($_POST['texto'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $ativo = (bool) ($_POST['ativo'] ?? false);
-        $foto = $_FILES['foto_pessoa']['name'] ? $_FILES['foto_pessoa'] : '';
+        $foto = $_FILES['foto_pessoa']['name'] ? $_FILES['foto_pessoa'] : $_POST['foto_atual'];
 
         if (!$nome) {
             throw new Exception('Nome é obrigatório!');
@@ -93,6 +93,7 @@ require_once 'includes/header-admin.php';
                     <div class="form-group col-md-6">
                         <label>Foto:</label>
                         <input type="file" class="form-control-file" name="foto_pessoa" />
+                        <input type="hidden" name="foto_atual" value="<?= $depoimento_info['foto'] ?>">
                     </div>
                     <div class="form-group col-md-12">
                         <label>* Texto do Depoimento:</label>

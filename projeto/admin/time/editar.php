@@ -14,7 +14,7 @@ try
         $cargo = filter_var($_POST['cargo'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $minicurriculo = filter_var($_POST['texto'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $ativo = (bool) ($_POST['ativo'] ?? false);
-        $foto = $_FILES['foto']['name'] ? $_FILES['foto'] : '';
+        $foto = $_FILES['foto']['name'] ? $_FILES['foto'] : $_POST['foto_atual'];
 
         if ($foto and is_array($foto)) {
             $nome_arquivo = upload_imagem($foto, 'time');
@@ -98,6 +98,7 @@ require_once 'includes/header-admin.php';
                     <div class="form-group col-md-6">
                         <label>Foto:</label>
                         <input type="file" class="form-control-file" name="foto" />
+                        <input type="hidden" name="foto_atual" value="<?= $membro_info['foto'] ?>" />
                     </div>
                     <div class="form-group col-md-6">
                         <label>* Cargo:</label>

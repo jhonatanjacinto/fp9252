@@ -2,7 +2,45 @@
 
 # Configurações Gerais
 require_once 'config.php';
-$msg = null;
+$msg = get_mensagem();
+$categoria_info = null;
+
+try 
+{
+    if (isset($_POST['atualizar_categoria']))
+    {
+        $id = $_POST['categoria_id'] ?? 0;
+        $nome = $_POST['nome_categoria'] ?? '';
+
+        $categoria = new Categoria();
+        $categoria->setId($id);
+        $categoria->setNome($nome);
+
+        if (!CategoriaDAO::atualizar($categoria)) {
+            throw new Exception('Não foi possível atualizar a Categoria!');
+        }
+
+        set_mensagem('Categoria atualizada com sucesso!', 'alert-success');
+    }
+
+    if (isset($_GET['id']) and is_numeric($_GET['id']))
+    {
+        $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
+        $categoria_info = CategoriaDAO::getCategoriaPorId($id);
+        
+        if (!$categoria_info) {
+            set_mensagem('Dados da Categoria não foram encontrados!', 'alert-warning', 'categorias.php');
+        }
+    }
+    else
+    {
+        set_mensagem('ID inválido para edição!', 'alert-warning', 'categorias.php');
+    }
+}
+catch(Exception $e)
+{
+    set_mensagem($e->getMessage(), 'alert-danger');
+}
 
 # Configurações da Página
 $titulo_pagina = "Administração | Editar Categoria";
@@ -33,13 +71,13 @@ require_once 'includes/header-admin.php';
                 <div class="row">
                     <div class="form-group col-md-12">
                         <label>* Nome da Categoria:</label>
-                        <input type="text" class="form-control" name="nome_categoria" value="" placeholder="Insira aqui o nome da categoria..." />
+                        <input type="text" class="form-control" name="nome_categoria" value="<?= $categoria_info->getNome() ?>" placeholder="Insira aqui o nome da categoria..." />
                     </div>
                     <div class="form-group col-md-12">
                         <button name="atualizar_categoria" class="btn btn-lg btn-success">
                             Salvar Categoria
                         </button>
-                        <input type="hidden" name="categoria_id" value="">
+                        <input type="hidden" name="categoria_id" value="<?= $categoria_info->getId() ?>">
                     </div>
                 </div>
             </div>

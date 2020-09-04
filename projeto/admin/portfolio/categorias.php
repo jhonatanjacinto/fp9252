@@ -2,7 +2,26 @@
 
 # Configurações Gerais
 require_once 'config.php';
-$msg = null;
+$msg = get_mensagem();
+
+try 
+{
+    if (isset($_GET['excluir']))
+    {
+        $id = filter_var($_GET['excluir'], FILTER_VALIDATE_INT);
+        if (!CategoriaDAO::excluir($id)) {
+            throw new Exception('Não foi possível excluir a categoria selecionada!');
+        }
+
+        set_mensagem('Categoria excluída com sucesso!', 'alert-success', 'categorias.php');
+    }
+}
+catch(Exception $e)
+{
+    set_mensagem($e->getMessage(), 'alert-danger', 'categorias.php');
+}
+
+$lista_categorias = CategoriaDAO::getCategorias();
 
 # Configurações da Página
 $titulo_pagina = "Administração | Categorias";
@@ -40,21 +59,23 @@ require_once 'includes/header-admin.php';
             </thead>
             <tbody>
 
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Nome da Categoria</td>
-                    <td>
-                        <a href="editar-categoria.php" class="btn btn-primary" title="Editar">
-                            <i class="far fa-edit"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="categorias.php" class="btn btn-danger" title="Excluir">
-                            <i class="far fa-trash-alt"></i>
-                        </a>
-                    </td>
-                </tr>
-                
+                <?php foreach ($lista_categorias as $categoria) : ?>
+                    <tr>
+                        <th scope="row"><?= $categoria->getId() ?></th>
+                        <td><?= $categoria->getNome() ?></td>
+                        <td>
+                            <a href="editar-categoria.php?id=<?= $categoria->getId() ?>" class="btn btn-primary" title="Editar">
+                                <i class="far fa-edit"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="categorias.php?excluir=<?= $categoria->getId() ?>" class="btn btn-danger" title="Excluir">
+                                <i class="far fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+
             </tbody>
           </table>
     </div>
