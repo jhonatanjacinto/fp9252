@@ -2,7 +2,27 @@
 
 # Configurações Gerais
 require_once 'config.php';
-$msg = null;
+$msg = get_mensagem();
+
+try
+{
+    if (isset($_GET['excluir']))
+    {
+        $id = filter_var($_GET['excluir'], FILTER_VALIDATE_INT);
+        if (!ProjetoDAO::excluir($id)) {
+            throw new Exception('Não foi possível excluir o projeto selecionado!');
+        }
+
+        set_mensagem('Projeto excluído com sucesso!', 'alert-success', 'index.php');
+    }
+}
+catch(Exception $e)
+{
+    set_mensagem($e->getMessage(), 'alert-danger', 'index.php');
+}
+
+# Lista de Projetos do Portfolio
+$lista_projetos = ProjetoDAO::getProjetos();
 
 # Configurações da Página
 $titulo_pagina = "Administração | Portfolio";
@@ -44,25 +64,27 @@ require_once 'includes/header-admin.php';
             </thead>
             <tbody>
                 
+            <?php foreach ($lista_projetos as $projeto) : ?>
                 <tr>
-                    <th scope="row">1</th>
-                    <td><img src="https://placehold.it/100x100" width="100" class="img-responsive" /></td>
-                    <td>Nome da Categoria</td>
-                    <td>Nome do Projeto</td>
-                    <td>12/04/1991 às 18h00</td>
-                    <td>Sim</td>
+                    <th scope="row"><?= $projeto->getId() ?></th>
+                    <td><img src="<?= get_imagem_url( $projeto->getImagem() ) ?>" width="100" class="img-responsive" /></td>
+                    <td><?= $projeto->getCategoria()->getNome() ?></td>
+                    <td><?= $projeto->getTitulo() ?></td>
+                    <td><?= get_data_formatada( $projeto->getDataProjeto() ) ?></td>
+                    <td><?= $projeto->isAtivo() ? 'Sim' : 'Não' ?></td>
                     <td>
-                        <a href="editar.php" class="btn btn-primary" title="Editar">
+                        <a href="editar.php?id=<?= $projeto->getId() ?>" class="btn btn-primary" title="Editar">
                             <i class="far fa-edit"></i>
                         </a>
                     </td>
                     <td>
-                        <a href="index.php" class="btn btn-danger" title="Excluir">
+                        <a href="index.php?excluir=<?= $projeto->getId() ?>" class="btn btn-danger" title="Excluir">
                             <i class="far fa-trash-alt"></i>
                         </a>
                     </td>
                 </tr>
-                
+            <?php endforeach; ?>
+
             </tbody>
           </table>
     </div>

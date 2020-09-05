@@ -29,10 +29,16 @@ function excluir_depoimento(int $depoimento_id) : bool
 
 /**
  * Retorna uma lista dos depoimentos cadastrados no sistema
+ * @param bool $ativos_only     Se TRUE retorna só os depoimentos ativos, caso contrário retorna todos
  * @return array
  */
-function get_depoimentos() : array
+function get_depoimentos(bool $ativos_only = false) : array
 {
+    if ($ativos_only) {
+        $sql = "SELECT * FROM depoimentos WHERE ativo = 1";
+        return db_query($sql);
+    }
+    
     $sql = "SELECT * FROM depoimentos";
     return db_query($sql);
 }

@@ -2,8 +2,44 @@
 
 # Configurações Gerais
 require_once 'config.php';
-$msg = null;
+$msg = get_mensagem();
 
+try
+{
+    if (isset($_POST['cadastrar_projeto']))
+    {
+        $categoria_id = filter_var($_POST['categoria'], FILTER_VALIDATE_INT);
+        $titulo = $_POST['titulo'] ?? '';
+        $descricao = $_POST['descricao'] ?? '';
+        $imagem = $_FILES['imagem']['name'] ? $_FILES['imagem'] : '';
+        $ativo = (bool) ($_POST['ativo'] ?? false);
+
+        if ($imagem and is_array($imagem)) {
+            $imagem_final = upload_imagem($imagem, 'portfolio', true, 300, 600);
+            $imagem = 'portfolio/' . $imagem_final;
+        }
+
+        $projeto = new Projeto();
+        $projeto->setTitulo($titulo);
+        $projeto->getCategoria()->setId($categoria_id);
+        $projeto->setDescricao($descricao);
+        $projeto->setAtivo($ativo);   
+        $projeto->setImagem($imagem);
+
+        if (!ProjetoDAO::adicionar($projeto)) {
+            throw new Exception('Não foi possível cadastrar o projeto na base de dados!');
+        }
+
+        set_mensagem('Projeto cadastrado com sucesso!', 'alert-success');
+    }
+}
+catch(Exception $e)
+{
+    set_mensagem($e->getMessage(), 'alert-danger');
+}
+
+# Retorna a lista de Categorias do Banco de dados
+$lista_categorias = CategoriaDAO::getCategorias();
 
 # Configurações da Página
 $titulo_pagina = "Administração | Novo Projeto";
@@ -40,6 +76,11 @@ require_once 'includes/header-admin.php';
                         <label>* Categoria do Projeto:</label>
                         <select name="categoria" class="form-control custom-select">
                             <option value="">-- Selecione uma Categoria --</option>
+                            <?php foreach ($lista_categorias as $categoria) : ?>
+                                <option value="<?= $categoria->getId() ?>">
+                                    <?= $categoria->getNome() ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="form-group col-md-6">
