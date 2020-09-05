@@ -32,8 +32,13 @@ function excluir_membro(int $membro_id) : bool
  * Retorna uma lista com todos os membros cadastrados no sistema
  * @return array
  */
-function get_membros() : array
+function get_membros(bool $ativos_only = false) : array
 {
+    if ($ativos_only) {
+        $sql = "SELECT * FROM nosso_time WHERE ativo = 1";
+        return db_query($sql);
+    }
+
     $sql = "SELECT * FROM nosso_time";
     return db_query($sql);
 }
