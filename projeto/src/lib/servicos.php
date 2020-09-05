@@ -30,8 +30,13 @@ function excluir_servico(int $servico_id) : bool
  * Retorna a lista de serviços cadastrados no sistema
  * @return array
  */
-function get_servicos() : array
+function get_servicos(bool $ativos_only = false) : array
 {
+    if ($ativos_only) {
+        $sql = "SELECT * FROM servicos WHERE ativo = 1";
+        return db_query($sql);
+    }
+
     $sql = "SELECT * FROM servicos";
     return db_query($sql);
 }
