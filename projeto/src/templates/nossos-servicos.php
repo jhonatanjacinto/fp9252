@@ -34,7 +34,7 @@ $lista_servicos = get_servicos(true);
                               <?php foreach ($lista_servicos as $indice => $servico) : ?>
                                    <div class="tab-pane <?= $indice == 0 ? 'active' : null ?>" id="tab0<?= $indice ?>" role="tabpanel">
                                         <div class="tab-pane-item">
-                                        <?= str_replace(PHP_EOL, '<br>', $servico['texto_servico']) ?>
+                                             <?= str_replace(PHP_EOL, '<br>', $servico['texto_servico']) ?>
                                         </div>
                                    </div>
                               <?php endforeach; ?>

@@ -43,13 +43,23 @@ class ProjetoDAO
     /**
      * @return Projeto[]
      */
-    public static function getProjetos() : array 
+    public static function getProjetos(bool $ativos_only = false) : array 
     {
         $lista_projetos = array();
         $db = new DB();
-        $sql = "SELECT p.*, c.nome_categoria FROM portfolio AS p
-         LEFT JOIN categorias AS c ON p.categoria_id = c.categoria_id
-         ORDER BY p.data_projeto DESC";
+
+        if ($ativos_only) {
+            $sql = "SELECT p.*, c.nome_categoria FROM portfolio AS p
+            LEFT JOIN categorias AS c ON p.categoria_id = c.categoria_id
+            WHERE p.ativo = 1
+            ORDER BY p.data_projeto DESC";
+        }
+        else {
+            $sql = "SELECT p.*, c.nome_categoria FROM portfolio AS p
+            LEFT JOIN categorias AS c ON p.categoria_id = c.categoria_id
+            ORDER BY p.data_projeto DESC";
+        }
+
         $projetos_db = $db->query($sql);
 
         if ($projetos_db)
