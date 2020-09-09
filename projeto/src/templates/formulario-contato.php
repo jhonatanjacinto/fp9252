@@ -32,13 +32,13 @@ try
           $mail->isSMTP();
           $mail->Host = 'smtp.umbler.com';
           $mail->SMTPAuth = true;
-          $mail->Username = 'php@jhonatanjacinto.com';
-          $mail->Password = 'teste!@34';
+          $mail->Username = 'EMAIL_DE_ENVIO_AQUI';
+          $mail->Password = 'SENHA_EMAIL_ENVIO_AQUI';
           $mail->SMTPSecure = '';
           $mail->SMTPAutoTLS = false;
           $mail->Port = 587;
-          $mail->setFrom('php@jhonatanjacinto.com', 'Caeland');
-          $mail->addAddress('jhonatanjacinto@gmail.com', 'Jhonatan Jacinto');
+          $mail->setFrom('no-reply@caeland.com', 'Caeland - No Reply');
+          $mail->addAddress('contato@caeland.com', 'Caeland');
           $mail->Subject = "Novo Contato - Caeland";
           $mail->Body = "
           Nova mensagem enviada pelo site da Caeland:
