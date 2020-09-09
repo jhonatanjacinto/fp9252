@@ -3,6 +3,8 @@
 
 class ProjetoDAO
 {
+    public static int $totalRegistros = 0;
+
     public static function adicionar(Projeto $projeto) : bool
     {
         $db = new DB();
@@ -43,16 +45,21 @@ class ProjetoDAO
     /**
      * @return Projeto[]
      */
-    public static function getProjetos(bool $ativos_only = false) : array 
+    public static function getProjetos(bool $ativos_only = false, int $pagina = 1, int $quantidade = 10) : array 
     {
         $lista_projetos = array();
         $db = new DB();
 
-        if ($ativos_only) {
-            $sql = "SELECT p.*, c.nome_categoria FROM portfolio AS p
+        if ($ativos_only) 
+        {
+            $offset = ($pagina - 1) * $quantidade;
+            $sql = "SELECT p.*, c.nome_categoria, (SELECT COUNT(*) FROM portfolio WHERE ativo = 1) AS total 
+            FROM portfolio AS p
             LEFT JOIN categorias AS c ON p.categoria_id = c.categoria_id
             WHERE p.ativo = 1
-            ORDER BY p.data_projeto DESC";
+            ORDER BY p.data_projeto DESC
+            LIMIT $quantidade OFFSET $offset
+            ";
         }
         else {
             $sql = "SELECT p.*, c.nome_categoria FROM portfolio AS p
@@ -64,6 +71,8 @@ class ProjetoDAO
 
         if ($projetos_db)
         {
+            self::$totalRegistros = $projetos_db[0]['total'] ?? 0;
+
             foreach ($projetos_db as $projeto_info)
             {
                 $projeto = new Projeto();
@@ -85,7 +94,11 @@ class ProjetoDAO
     public static function getProjetoPorId(int $projeto_id) : ?Projeto 
     {
         $db = new DB();
-        $sql = "SELECT * FROM portfolio WHERE projeto_id = ?";
+        $sql = "SELECT p.*, c.nome_categoria FROM portfolio AS p
+        LEFT JOIN categorias AS c
+        ON p.categoria_id = c.categoria_id 
+        WHERE p.projeto_id = ?";
+
         $params = array( $projeto_id );
         $projeto_info = $db->query($sql, 'i', $params, true);
 
@@ -101,6 +114,10 @@ class ProjetoDAO
             
             if ($projeto_info['categoria_id']) {
                 $projeto->getCategoria()->setId((int) $projeto_info['categoria_id']);
+                $projeto->getCategoria()->setNome($projeto_info['nome_categoria']);
+            }
+            else {
+                $projeto->getCategoria()->setNome('SEM CATEGORIA');
             }
 
             return $projeto;
