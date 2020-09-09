@@ -2,6 +2,8 @@
 
 $msg = null;
 
+use PHPMailer\PHPMailer\PHPMailer;
+
 try 
 {
      if (isset($_POST['cadastrar_contato']))
@@ -24,6 +26,29 @@ try
 
           if (!cadastrar_contato($nome, $email, $mensagem)) {
                throw new Exception('Não foi possível cadastrar sua mensagem de contato na base de dados!');
+          }
+
+          $mail = new PHPMailer();
+          $mail->isSMTP();
+          $mail->Host = 'smtp.umbler.com';
+          $mail->SMTPAuth = true;
+          $mail->Username = 'php@jhonatanjacinto.com';
+          $mail->Password = 'teste!@34';
+          $mail->SMTPSecure = '';
+          $mail->SMTPAutoTLS = false;
+          $mail->Port = 587;
+          $mail->setFrom('php@jhonatanjacinto.com', 'Caeland');
+          $mail->addAddress('jhonatanjacinto@gmail.com', 'Jhonatan Jacinto');
+          $mail->Subject = "Novo Contato - Caeland";
+          $mail->Body = "
+          Nova mensagem enviada pelo site da Caeland:
+          Nome: $nome
+          E-mail: $email
+          Mensagem: $mensagem
+          ";
+
+          if (!$mail->send()) {
+               throw new Exception($mail->ErrorInfo);
           }
 
           $msg = array(

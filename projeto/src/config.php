@@ -43,7 +43,7 @@ if (isset($_GET['logout'])) {
 
 /** Faz o registro de uma função de autoload das classes utilizadas na aplicação */
 spl_autoload_register(function($nomeClasse) {
-    $path_to_class = __DIR__ . '/classes/' . $nomeClasse . '.php';
+    $path_to_class = __DIR__ . '/classes/' . str_replace('\\', '/', $nomeClasse) . '.php';
     if (file_exists($path_to_class)) {
         require_once $path_to_class;
     }
